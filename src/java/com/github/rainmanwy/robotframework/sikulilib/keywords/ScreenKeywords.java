@@ -129,16 +129,33 @@ public class ScreenKeywords {
     }
     
     @RobotKeyword("Right click image")
-    @ArgumentNames({"image"})
+    @ArgumentNames({"image", "xOffset=0", "yOffset=0"})
     public void rightClick(String image) throws Exception{
         wait(image, Double.toString(this.timeout));
         try {
             screen.rightClick(image);
         }
         catch (FindFailed e) {
-            throw new ScreenOperationException("Click "+image+" failed"+e.getMessage(), e);
+            throw new ScreenOperationException("Right Click "+image+" failed"+e.getMessage(), e);
         }
     }
+
+//added by sabotchick    
+    @RobotKeywordOverload
+    public void rightClick(String image, int xOffset, int yOffset) throws Exception{
+        Match match = wait(image, Double.toString(this.timeout));
+        try {
+            int newX = match.getX() + xOffset;
+            int newY = match.getY() + yOffset;
+            Location newLocation = new Location(newX, newY);
+            screen.rightClick(newLocation);
+        }
+        catch (FindFailed e) {
+            capture();
+            throw new ScreenOperationException("Right click "+image+" failed"+e.getMessage(), e);
+        }
+    }
+	
 
 //    @RobotKeyword("Wait image shown")
 //    @ArgumentNames({"image", "timeout"})
